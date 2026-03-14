@@ -7195,21 +7195,15 @@ function loadDemoData() {
 const _SB_URL = 'https://xmjaihxpuhygrjpghiww.supabase.co';
 const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtamFpaHhwdWh5Z3JqcGdoaXd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMzYyMzIsImV4cCI6MjA4ODkxMjIzMn0.DO1n4zrn8y60MBtNhRukGVL68k2oqq9Yqi4QobG_WTo';
 
-// STARTUP — Supabase auth aktif
+// STARTUP — Direkt erişim (auth devre dışı)
 (function startup() {
-  const ok = initSupabase(_SB_URL, _SB_KEY);
-  if (!ok) {
-    // Supabase başlamazsa localStorage ile devam et
-    const mainEl = document.getElementById('main');
-    if (mainEl) mainEl.style.display = '';
-    loadState(); initApp(); return;
-  }
-  // Auth ekranını göster, mevcut oturumu kontrol et
-  const authEl = document.getElementById('auth-screen');
+  initSupabase(_SB_URL, _SB_KEY); // Supabase hazır tut ama giriş isteme
   const mainEl = document.getElementById('main');
-  if (authEl) { authEl.style.removeProperty('display'); authEl.classList.remove('hidden'); }
-  if (mainEl) mainEl.style.display = 'none';
-  checkExistingSession();
+  if (mainEl) mainEl.style.display = '';
+  const authEl = document.getElementById('auth-screen');
+  if (authEl) authEl.classList.add('hidden');
+  loadState();
+  initApp();
 })();
 </script>
 </body>
