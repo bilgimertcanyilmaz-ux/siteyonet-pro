@@ -1056,8 +1056,8 @@ select.fi,select.fs{
   </div>
 </div>
 
-<!-- AUTH SCREEN (devre dışı) -->
-<div id="auth-screen" class="hidden" style="display:none!important">
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="hidden">
   <div class="auth-box">
     <div class="auth-logo">
       <div class="auth-logo-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4"/></svg></div>
@@ -7191,12 +7191,25 @@ function loadDemoData() {
 
 // Not: initApp(), Supabase auth başarısında çağrılır.
 
-// STARTUP — Auth devre dışı, direkt aç
+// ── SUPABASE KREDENSİYELLER ──────────────────────
+const _SB_URL = 'https://xmjaihxpuhygrjpghiww.supabase.co';
+const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtamFpaHhwdWh5Z3JqcGdoaXd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMzYyMzIsImV4cCI6MjA4ODkxMjIzMn0.DO1n4zrn8y60MBtNhRukGVL68k2oqq9Yqi4QobG_WTo';
+
+// STARTUP — Supabase auth aktif
 (function startup() {
+  const ok = initSupabase(_SB_URL, _SB_KEY);
+  if (!ok) {
+    // Supabase başlamazsa localStorage ile devam et
+    const mainEl = document.getElementById('main');
+    if (mainEl) mainEl.style.display = '';
+    loadState(); initApp(); return;
+  }
+  // Auth ekranını göster, mevcut oturumu kontrol et
+  const authEl = document.getElementById('auth-screen');
   const mainEl = document.getElementById('main');
-  if (mainEl) mainEl.style.display = '';
-  loadState();
-  initApp();
+  if (authEl) { authEl.style.removeProperty('display'); authEl.classList.remove('hidden'); }
+  if (mainEl) mainEl.style.display = 'none';
+  checkExistingSession();
 })();
 </script>
 </body>
