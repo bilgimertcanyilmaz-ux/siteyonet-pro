@@ -7197,13 +7197,21 @@ const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 
 // STARTUP — Direkt erişim (auth devre dışı)
 (function startup() {
-  initSupabase(_SB_URL, _SB_KEY); // Supabase hazır tut ama giriş isteme
+  initSupabase(_SB_URL, _SB_KEY);
   const mainEl = document.getElementById('main');
   if (mainEl) mainEl.style.display = '';
   const authEl = document.getElementById('auth-screen');
   if (authEl) authEl.classList.add('hidden');
   loadState();
-  initApp();
+  // İlk açılışta veri yoksa demo verileri otomatik yükle
+  if (!S.apartmanlar || S.apartmanlar.length === 0) {
+    const _orig = window.confirm;
+    window.confirm = () => true;
+    loadDemoData();
+    window.confirm = _orig;
+  } else {
+    initApp();
+  }
 })();
 </script>
 </body>
