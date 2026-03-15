@@ -1527,53 +1527,28 @@ select.fi,select.fs{
 
   <!-- TOPLU EKLE -->
   <div id="sak-toplu" style="display:none">
-    <div class="g2" style="gap:18px">
-      <div class="card">
-        <div class="card-t mb4">📋 Toplu Sakin Ekleme</div>
-        <div class="t3 mb16" style="font-size:12px">Her satır bir sakin. Zorunlu alanlar: Daire No, Ad Soyad, Tip (malik/kiralic). Diğer alanlar opsiyonel.</div>
-        <div style="background:var(--s2);border-radius:8px;padding:12px;margin-bottom:14px;font-size:11.5px;font-family:monospace;color:var(--tx-2)">
-          Daire No | Ad Soyad | Tip | Telefon | E-posta | Aidat | Borç
-        </div>
-        <div id="toplu-satirlar"></div>
-        <div class="fc g8 mt12">
-          <button class="btn bg sm" onclick="topluSatirEkle()">+ Satır Ekle</button>
-          <button class="btn bg sm" onclick="topluSatirEkle(5)">+ 5 Satır</button>
-          <button class="btn bg sm" onclick="topluTemizle()">Temizle</button>
-        </div>
-        <div class="sep mt12 mb12"></div>
-        <div class="fbc">
-          <div>
-            <div class="tip-toggle" style="margin:0">
-              <button class="tip-btn on on-ev" id="toplu-tip-btn-malik" onclick="setTopluTip('malik')">🏠 Hepsi Malik</button>
-              <button class="tip-btn" id="toplu-tip-btn-kiralik" onclick="setTopluTip('kiralik')">🔑 Hepsi Kiracı</button>
-              <button class="tip-btn" id="toplu-tip-btn-karma" onclick="setTopluTip('karma')">🔀 Karma</button>
-            </div>
-          </div>
-          <button class="btn bp" onclick="saveTopluSakin()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Toplu Kaydet</button>
-        </div>
-        <div id="toplu-sonuc" class="mt12" style="display:none"></div>
+    <div class="card">
+      <div style="font-size:20px;font-weight:700;color:var(--tx);margin-bottom:4px">Daire Listesi</div>
+      <div style="font-size:13px;color:var(--tx-3);margin-bottom:20px">Daireler İle İlgili Kişileri Tanımlayınız</div>
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 16px;margin-bottom:22px;display:flex;gap:10px;align-items:flex-start">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#3b82f6;stroke-width:2;fill:none;flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div style="font-size:12.5px;color:#1e40af;line-height:1.65">Siteniz oluşturulurken otomatik olarak daireleriniz de hazırlandı. Dairelerin kat malikleri ve kiracılar ile ilişkilerinde kolayca tanımlayabilmeniz için de bütün dairelerin bilgileri de bu sayfaya toplandı. Daire nosunu, tipini ve grubunu da kolaylıkla değiştirebilir, tüm sitenin durumunu görebilirsiniz.</div>
       </div>
-      <div>
-        <div class="card mb14">
-          <div class="card-t mb8">📥 CSV/Excel ile İçe Aktar</div>
-          <div class="t3 mb12" style="font-size:12px">CSV dosyasından sakin bilgilerini otomatik içe aktarın.</div>
-          <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;cursor:pointer" onclick="document.getElementById('csv-input').click()">
-            <div style="font-size:24px;margin-bottom:8px">📄</div>
-            <div style="font-size:13px;font-weight:600;color:var(--tx-2)">CSV dosyası seçin</div>
-            <div style="font-size:11px;color:var(--tx-3);margin-top:4px">Sütun sırası: Daire, Ad Soyad, Tip, Telefon, Email, Aidat</div>
-          </div>
-          <input type="file" id="csv-input" accept=".csv,.txt" style="display:none" onchange="importCSV(this)">
-        </div>
-        <div class="card">
-          <div class="card-t mb8">💡 İpuçları</div>
-          <div style="font-size:12px;color:var(--tx-3);line-height:1.8">
-            <div>• <strong>Tip alanı:</strong> "malik" veya "kiralik" yazın</div>
-            <div>• <strong>Daire No:</strong> "1", "1A", "Z-2" gibi yazılabilir</div>
-            <div>• <strong>Aidat:</strong> Sadece rakam giriniz (₺ işareti olmadan)</div>
-            <div>• <strong>Toplu ekleme</strong> mevcut sakinlerin üzerine yazmaz</div>
-            <div>• Daire No çakışması varsa uyarı verir</div>
-          </div>
-        </div>
+      <div style="display:flex;align-items:center;gap:20px;margin-bottom:16px">
+        <label style="font-size:13px;font-weight:600;min-width:115px">İşlem Tarihi <span style="color:var(--err)">*</span></label>
+        <input type="date" id="toplu-tarih" class="fi" style="width:175px">
+      </div>
+      <div style="display:flex;align-items:center;gap:20px;margin-bottom:26px">
+        <label style="font-size:13px;font-weight:600;min-width:115px">Blok seçiniz</label>
+        <select id="toplu-blok" class="fi" style="width:300px" onchange="renderTopluDaireler()">
+          <option value="">-- Apartman seçin --</option>
+        </select>
+      </div>
+      <div id="toplu-tablo-container"></div>
+      <div id="toplu-sonuc" style="display:none;margin-top:12px"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:18px;gap:8px">
+        <button class="btn bg" onclick="topluTemizle()">Temizle</button>
+        <button class="btn bp" onclick="saveTopluDaireler()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Kaydet</button>
       </div>
     </div>
   </div>
@@ -2951,7 +2926,7 @@ function goPage(p) {
  if (p==='icra') { renderIcra(); renderIcraRapor(); }
   if (p==='finans') { renderFinans(); renderFinansRapor(); }
   if (p==='ayarlar') { loadSettings(); renderSetStats(); }
-  if (p==='sakinler') { renderSakinler(); topluSatirEkle && document.getElementById('toplu-satirlar') && !document.getElementById('toplu-satirlar').children.length && topluSatirEkle(3); }
+  if (p==='sakinler') { renderSakinler(); initTopluDaireForm(); }
   if (p==='personel') { renderPersonel(); }
   if (p==='duyurular') { renderDuyurular(); }
   if (p==='ariza') { renderAriza(); }
@@ -3010,7 +2985,7 @@ document.querySelectorAll('.ov').forEach(o => o.addEventListener('click', e => {
 // 
 // DROPDOWNS — central sync
 // 
-const DD_IDS = ['kar-apt','isl-apt','den-apt','asan-apt','tek-apt','gov-apt','icra-apt','icra-f-apt','tek-f-apt','kar-f-apt','gov-f-apt', 'sak-apt', 'per-apt', 'duy-apt', 'arz-apt', 'arz-f-apt', 'tah-o-apt', 'sig-apt', 'top-apt', 'fat-apt', 'fin-apt', 'fin-f-apt', 'sig-f-apt', 'top-f-apt', 'fat-f-apt'];
+const DD_IDS = ['kar-apt','isl-apt','den-apt','asan-apt','tek-apt','gov-apt','icra-apt','icra-f-apt','tek-f-apt','kar-f-apt','gov-f-apt', 'sak-apt', 'per-apt', 'duy-apt', 'arz-apt', 'arz-f-apt', 'tah-o-apt', 'sig-apt', 'top-apt', 'fat-apt', 'fin-apt', 'fin-f-apt', 'sig-f-apt', 'top-f-apt', 'fat-f-apt', 'toplu-blok'];
 
 function syncDropdowns() {
  DD_IDS.forEach(id => {
@@ -4203,102 +4178,99 @@ function setSakinTip(tip) {
   }
 }
 
-// Toplu ekleme değişkeni
-let topluTip = 'malik';
-
-function topluSatirEkle(n=1) {
-  const cont=document.getElementById('toplu-satirlar'); if(!cont) return;
-  for(let i=0;i<n;i++){
-    const idx=cont.children.length+1;
-    const satir=document.createElement('div');
-    satir.style.cssText='display:grid;grid-template-columns:80px 1fr 90px 130px 1fr 80px 80px 32px;gap:6px;margin-bottom:6px;align-items:center';
-    satir.innerHTML=`
-      <input class="fi" placeholder="Daire*" style="padding:6px 8px;font-size:12px" data-col="daire">
-      <input class="fi" placeholder="Ad Soyad*" style="padding:6px 8px;font-size:12px" data-col="ad">
-      <select class="fi" style="padding:6px 8px;font-size:12px" data-col="tip">
-        <option value="malik">Malik</option><option value="kiralik">Kiracı</option>
-      </select>
-      <input class="fi" placeholder="Telefon" style="padding:6px 8px;font-size:12px" data-col="tel">
-      <input class="fi" placeholder="E-posta" style="padding:6px 8px;font-size:12px" data-col="email">
-      <input class="fi" placeholder="Aidat ₺" type="number" style="padding:6px 8px;font-size:12px" data-col="aidat">
-      <input class="fi" placeholder="Borç ₺" type="number" style="padding:6px 8px;font-size:12px" data-col="borc">
-      <button onclick="this.parentElement.remove()" style="background:var(--err-bg);color:var(--err);border:1px solid var(--err);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:12px">✕</button>`;
-    cont.appendChild(satir);
+function initTopluDaireForm() {
+  const tarihEl = document.getElementById('toplu-tarih');
+  if (tarihEl && !tarihEl.value) tarihEl.value = new Date().toISOString().slice(0,10);
+  const blokEl = document.getElementById('toplu-blok');
+  if (blokEl && !blokEl.value && selectedAptId) {
+    blokEl.value = selectedAptId;
+    renderTopluDaireler();
   }
 }
 
-function setTopluTip(tip){
-  topluTip=tip;
-  ['malik','kiralik','karma'].forEach(t=>{
-    const el=document.getElementById('toplu-tip-btn-'+t);
-    if(el) el.className='tip-btn'+(t===tip?' on '+(t==='malik'?'on-ev':t==='kiralik'?'on-ki':''):'');
+function renderTopluDaireler() {
+  const aptId = document.getElementById('toplu-blok')?.value;
+  const container = document.getElementById('toplu-tablo-container');
+  if (!container) return;
+  if (!aptId) { container.innerHTML = ''; return; }
+  const apt = S.apartmanlar.find(a => String(a.id) === String(aptId));
+  if (!apt) return;
+  const count = apt.daireSayisi || 10;
+  const existing = {};
+  S.sakinler.filter(s => String(s.aptId) === String(aptId)).forEach(s => {
+    if (!existing[s.daire]) existing[s.daire] = {};
+    existing[s.daire][s.tip] = s;
   });
-  if(tip!=='karma'){
-    document.querySelectorAll('#toplu-satirlar select[data-col="tip"]').forEach(el=>el.value=tip);
+  const tipOpts = ['Standart','Dubleks','Stüdyo','Penthouse','1+1','2+1','3+1','4+1'].map(t=>`<option value="${t}">${t}</option>`).join('');
+  const grpOpts = ['Standart','A Grubu','B Grubu','C Grubu','Lüks'].map(g=>`<option value="${g}">${g}</option>`).join('');
+  let rows = '';
+  for (let i = 1; i <= count; i++) {
+    const dNo = String(i);
+    const mal = existing[dNo]?.malik || {};
+    const kir = existing[dNo]?.kiralik || {};
+    const selTip = v => tipOpts.replace(`value="${v||'Standart'}"`,`value="${v||'Standart'}" selected`);
+    const selGrp = v => grpOpts.replace(`value="${v||'Standart'}"`,`value="${v||'Standart'}" selected`);
+    rows += `<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:7px 10px"><div style="border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:13px;font-weight:600;min-width:36px;text-align:center;display:inline-block"><input class="fi" value="${dNo}" data-dno="${i}" style="width:40px;padding:3px 4px;font-size:13px;font-weight:600;text-align:center;border:none;background:transparent"></div></td>
+      <td style="padding:7px 8px"><input class="fi" placeholder="Ad Soyad" value="${mal.ad||''}" data-malik="${i}" style="width:100%;padding:6px 10px;font-size:12.5px"></td>
+      <td style="padding:7px 8px"><input class="fi" placeholder="Ad Soyad" value="${kir.ad||''}" data-kiralik="${i}" style="width:100%;padding:6px 10px;font-size:12.5px"></td>
+      <td style="padding:7px 8px"><select class="fi" data-tip="${i}" style="width:100%;padding:6px 10px;font-size:12.5px">${selTip(mal.dairetipi)}</select></td>
+      <td style="padding:7px 8px"><select class="fi" data-grup="${i}" style="width:100%;padding:6px 10px;font-size:12.5px">${selGrp(mal.dairegrup)}</select></td>
+    </tr>`;
   }
+  container.innerHTML = `
+    <div style="font-size:16px;font-weight:700;margin-bottom:14px;color:var(--tx)">${apt.ad} (${count} Daire)</div>
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:10px">
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:var(--s2)">
+            <th style="padding:10px 10px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border);width:80px">Daire No</th>
+            <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border)">Kat Maliki</th>
+            <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border)">Kiracı</th>
+            <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border);width:145px">Daire tipi</th>
+            <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border);width:145px">Daire grup</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
 }
 
-function topluTemizle(){
-  const c=document.getElementById('toplu-satirlar'); if(c) c.innerHTML='';
-  const r=document.getElementById('toplu-sonuc'); if(r){r.style.display='none';r.innerHTML='';}
+function topluTemizle() {
+  const c = document.getElementById('toplu-tablo-container'); if (c) c.innerHTML='';
+  const r = document.getElementById('toplu-sonuc'); if (r){r.style.display='none';r.innerHTML='';}
+  const b = document.getElementById('toplu-blok'); if (b) b.value='';
 }
 
-function saveTopluSakin(){
-  const aptId=selectedAptId;
-  if(!aptId){ toast('Apartman seçilmedi.','err'); return; }
-  const apt=S.apartmanlar.find(a=>a.id==aptId);
-  const cont=document.getElementById('toplu-satirlar');
-  if(!cont||!cont.children.length){ toast('En az bir satır ekleyin.','err'); return; }
-
-  let ok=0, hata=[], cakisan=[];
-  Array.from(cont.children).forEach((satir,i)=>{
-    const g=(col)=>satir.querySelector('[data-col="'+col+'"]')?.value?.trim()||'';
-    const daire=g('daire'), ad=g('ad'), tip=g('tip'), tel=g('tel'), email=g('email');
-    const aidat=parseFloat(g('aidat'))||0, borc=parseFloat(g('borc'))||0;
-    if(!daire||!ad){ if(daire||ad) hata.push('Satır '+(i+1)+': Daire ve Ad zorunlu'); return; }
-    const mevcut=S.sakinler.find(x=>x.aptId==aptId&&x.daire===daire);
-    if(mevcut){ cakisan.push('Daire '+daire+' ('+mevcut.ad+')'); return; }
-    S.sakinler.push({ id:Date.now()+i, ad, aptId:+aptId, aptAd:apt?apt.ad:'', tip, tel, email, daire, aidat, borc, giris:'', not:'' });
-    ok++;
-  });
-
-  if(ok>0){ save(); }
-  const sonuc=document.getElementById('toplu-sonuc');
-  let msg=`<div style="padding:12px;border-radius:8px;font-size:13px">`;
-  if(ok>0) msg+=`<div style="color:var(--ok);font-weight:700">✅ ${ok} sakin başarıyla eklendi.</div>`;
-  if(hata.length) msg+=`<div style="color:var(--err);margin-top:4px">⚠️ ${hata.join('<br>')}</div>`;
-  if(cakisan.length) msg+=`<div style="color:var(--warn);margin-top:4px">⚡ Çakışma (atlandı): ${cakisan.join(', ')}</div>`;
-  msg+='</div>';
-  sonuc.innerHTML=msg; sonuc.style.display='';
-  if(ok>0) toast(ok+' sakin eklendi.','ok');
-}
-
-function importCSV(input){
-  const file=input.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=(e)=>{
-    const lines=e.target.result.split('\n').filter(l=>l.trim());
-    const cont=document.getElementById('toplu-satirlar');
-    if(cont) cont.innerHTML='';
-    let n=0;
-    lines.forEach((line,i)=>{
-      if(i===0&&line.toLowerCase().includes('daire')) return; // header
-      const parts=line.split(',').map(x=>x.trim().replace(/^"|"$/g,''));
-      if(parts.length<2) return;
-      const [daire,ad,tip,tel,email,aidat]=[...parts,...Array(6).fill('')];
-      topluSatirEkle(1);
-      const satir=cont.lastChild; if(!satir) return;
-      const setC=(col,v)=>{ const el=satir.querySelector('[data-col="'+col+'"]'); if(el) el.value=v; };
-      setC('daire',daire); setC('ad',ad);
-      const tipEl=satir.querySelector('[data-col="tip"]');
-      if(tipEl) tipEl.value=(tip||'').toLowerCase().includes('kira')?'kiralik':'malik';
-      setC('tel',tel); setC('email',email); setC('aidat',aidat||'');
-      n++;
-    });
-    toast(n+' satır içe aktarıldı.','ok');
-    input.value='';
-  };
-  reader.readAsText(file,'UTF-8');
+function saveTopluDaireler() {
+  const aptId = document.getElementById('toplu-blok')?.value;
+  if (!aptId) { toast('Önce apartman seçin.','err'); return; }
+  const apt = S.apartmanlar.find(a => String(a.id)===String(aptId));
+  const tarih = document.getElementById('toplu-tarih')?.value||'';
+  const count = apt?.daireSayisi||10;
+  let ok=0, guncellendi=0;
+  for (let i=1; i<=count; i++) {
+    const dNo = document.querySelector(`[data-dno="${i}"]`)?.value?.trim()||String(i);
+    const malikAd = document.querySelector(`[data-malik="${i}"]`)?.value?.trim()||'';
+    const kiralikAd = document.querySelector(`[data-kiralik="${i}"]`)?.value?.trim()||'';
+    const tip = document.querySelector(`[data-tip="${i}"]`)?.value||'Standart';
+    const grup = document.querySelector(`[data-grup="${i}"]`)?.value||'Standart';
+    if (malikAd) {
+      const ex = S.sakinler.find(s=>String(s.aptId)===String(aptId)&&s.daire===dNo&&s.tip==='malik');
+      if (ex) { ex.ad=malikAd; ex.dairetipi=tip; ex.dairegrup=grup; guncellendi++; }
+      else { S.sakinler.push({id:Date.now()+i,ad:malikAd,aptId:+aptId,aptAd:apt?.ad||'',tip:'malik',daire:dNo,dairetipi:tip,dairegrup:grup,giris:tarih,aidat:0,borc:0,tel:'',email:'',not:''}); ok++; }
+    }
+    if (kiralikAd) {
+      const ex = S.sakinler.find(s=>String(s.aptId)===String(aptId)&&s.daire===dNo&&s.tip==='kiralik');
+      if (ex) { ex.ad=kiralikAd; guncellendi++; }
+      else { S.sakinler.push({id:Date.now()+i+5000,ad:kiralikAd,aptId:+aptId,aptAd:apt?.ad||'',tip:'kiralik',daire:dNo,giris:tarih,aidat:0,borc:0,tel:'',email:'',not:''}); ok++; }
+    }
+  }
+  save();
+  const sonuc = document.getElementById('toplu-sonuc');
+  sonuc.innerHTML = `<div style="padding:12px;border-radius:8px;background:var(--ok-bg);border:1px solid var(--ok-bd);color:var(--ok);font-size:13px;font-weight:600">✅ ${ok} yeni sakin eklendi${guncellendi?', '+guncellendi+' güncellendi':''}.</div>`;
+  sonuc.style.display='';
+  toast(`${ok+guncellendi} sakin kaydedildi.`,'ok');
 }
 
 
