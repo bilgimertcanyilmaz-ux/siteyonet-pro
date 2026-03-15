@@ -62,6 +62,16 @@
   --pur-bg:    #f5f3ff;
   --pur-bd:    #ddd6fe;
 
+  /* Ek Renkler (uyumluluk) */
+  --gl:        #f0fdf4;
+  --gn:        #15803d;
+  --rd:        #dc2626;
+  --rl:        #fef2f2;
+  --ac:        #06b6d4;
+  --t1:        #0d1526;
+  --t2:        #374151;
+  --surface-2: #f8f9fc;
+
   /* Shadows */
   --sh-xs: 0 1px 2px rgba(10,15,30,.06);
   --sh-sm: 0 1px 4px rgba(10,15,30,.08), 0 1px 2px rgba(10,15,30,.04);
@@ -1019,6 +1029,53 @@ select.fi,select.fs{
 #sb-conn-dot{width:7px;height:7px;border-radius:50%;background:var(--tx-4);}
 #sb-conn-dot.ok{background:var(--ok);}
 #sb-conn-dot.err{background:var(--err);}
+
+/* ── ROL SEÇİM EKRANI ──────────────────── */
+#role-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(135deg,#0a0f1e 0%,#111827 50%,#0d1a3a 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Sans',sans-serif;padding:20px;
+}
+#role-screen.hidden{display:none;}
+.role-box{max-width:520px;width:100%;text-align:center;}
+.role-box h1{font-family:'Playfair Display',serif;font-size:28px;color:#fff;margin-bottom:6px;}
+.role-box p{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:32px;}
+.role-cards{display:flex;flex-direction:column;gap:14px;}
+.role-card{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:20px 24px;cursor:pointer;
+  display:flex;align-items:center;gap:16px;text-align:left;
+  transition:all .2s;
+}
+.role-card:hover{background:rgba(255,255,255,.1);border-color:rgba(26,86,219,.5);transform:translateY(-2px);}
+.role-card .rc-ico{
+  width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.role-card .rc-ico svg{width:24px;height:24px;stroke-width:1.5;fill:none;}
+.role-card .rc-title{font-size:15px;font-weight:700;color:#fff;}
+.role-card .rc-desc{font-size:12px;color:rgba(255,255,255,.45);margin-top:2px;line-height:1.5;}
+.rc-yonetici .rc-ico{background:rgba(26,86,219,.2);}
+.rc-yonetici .rc-ico svg{stroke:#60a5fa;}
+.rc-sakin .rc-ico{background:rgba(5,150,105,.2);}
+.rc-sakin .rc-ico svg{stroke:#6ee7b7;}
+.rc-superadmin .rc-ico{background:rgba(124,58,237,.2);}
+.rc-superadmin .rc-ico svg{stroke:#c4b5fd;}
+
+/* ── SÜPER ADMİN PANEL ──────────────────── */
+.sa-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.sa-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);padding:18px 20px;}
+.sa-stat .sa-val{font-size:28px;font-weight:800;color:var(--brand);margin-top:6px;}
+.sa-stat .sa-lbl{font-size:12px;color:var(--tx-3);font-weight:500;}
+.sa-site-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;gap:12px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);font-size:13px;}
+.sa-site-row:hover{background:var(--s2);}
+.sa-site-header{font-weight:700;color:var(--tx-3);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;background:var(--s2);border-radius:var(--r8) var(--r8) 0 0;}
+@media(max-width:768px){
+  .sa-stat-grid{grid-template-columns:1fr 1fr;}
+  .sa-site-row{grid-template-columns:1fr 1fr;gap:8px;font-size:12px;}
+  .role-cards{gap:10px;}
+  .role-card{padding:16px 18px;}
+}
 </style>
 </head>
 <body>
@@ -1100,6 +1157,29 @@ select.fi,select.fs{
   </div>
 </div>
 
+<!-- ROL SEÇİM EKRANI -->
+<div id="role-screen" class="hidden">
+  <div class="role-box">
+    <div style="margin-bottom:20px"><svg viewBox="0 0 24 24" style="width:44px;height:44px;stroke:#60a5fa;stroke-width:1.5;fill:none"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 11h1m5 0h-1M9 15h1m5 0h-1"/></svg></div>
+    <h1>SiteYönet Pro</h1>
+    <p>Sisteme nasıl giriş yapmak istiyorsunuz?</p>
+    <div class="role-cards">
+      <div class="role-card rc-yonetici" onclick="selectRole('yonetici')">
+        <div class="rc-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div><div class="rc-title">Yönetici Girişi</div><div class="rc-desc">Site yöneticisi olarak tüm modüllere erişin. Apartman, sakin, finans, raporlar ve daha fazlasını yönetin.</div></div>
+      </div>
+      <div class="role-card rc-sakin" onclick="selectRole('sakin')">
+        <div class="rc-ico"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div><div class="rc-title">Site Sakini Girişi</div><div class="rc-desc">Dairenizin durumunu, site kararlarını, duyuruları ve gelir-gider bilgilerini görüntüleyin.</div></div>
+      </div>
+      <div class="role-card rc-superadmin" onclick="selectRole('superadmin')">
+        <div class="rc-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+        <div><div class="rc-title">Süper Admin</div><div class="rc-desc">Yazılım sahibi paneli. Tüm kayıtlı siteleri, abonelikleri ve onay bekleyen başvuruları yönetin.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="sb-overlay" onclick="toggleSidebar()"></div>
 <!-- SIDEBAR -->
 <aside id="sb">
@@ -1109,47 +1189,49 @@ select.fi,select.fs{
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Genel</div>
-    <div class="ni on" data-p="dashboard"><div class="nico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>Anasayfa</div>
-    <div class="ni" data-p="apartmanlar"><div class="nico"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 11h1m5 0h-1M9 15h1m5 0h-1"/></svg></div>Apartmanlar<span class="nbadge" id="bdg-apt">0</span></div>
-    <div class="ni" data-p="karar"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>Karar Metni</div>
-    <div class="ni" data-p="isletme"><div class="nico"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div>İşletme Projesi</div>
+    <div class="ni on" data-p="dashboard" data-role="yonetici sakin superadmin"><div class="nico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>Anasayfa</div>
+    <div class="ni" data-p="apartmanlar" data-role="yonetici superadmin"><div class="nico"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 11h1m5 0h-1M9 15h1m5 0h-1"/></svg></div>Apartmanlar<span class="nbadge" id="bdg-apt">0</span></div>
+    <div class="ni" data-p="karar" data-role="yonetici sakin"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>Karar Metni</div>
+    <div class="ni" data-p="isletme" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div>İşletme Projesi</div>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Operasyon</div>
-    <div class="ni" data-p="denetim"><div class="nico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>Denetim Raporları<span class="nbadge rd" id="bdg-den" style="display:none">!</span></div>
-    <div class="ni" data-p="asansor"><div class="nico"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 10l3-3 3 3M9 14l3 3 3-3"/></svg></div>Asansör Etiket<span class="nbadge rd" id="bdg-asan" style="display:none">0</span></div>
-    <div class="ni" data-p="teklifler"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>Teklifler<span class="nbadge am" id="bdg-tek" style="display:none">0</span></div>
-    <div class="ni" data-p="gorevler"><div class="nico"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>Görev Yönetimi<span class="nbadge am" id="bdg-gov">0</span></div>
-    <div class="ni" data-p="icra"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>İcra Listesi<span class="nbadge rd" id="bdg-icra" style="display:none">0</span></div>
+    <div class="ni" data-p="denetim" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>Denetim Raporları<span class="nbadge rd" id="bdg-den" style="display:none">!</span></div>
+    <div class="ni" data-p="asansor" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 10l3-3 3 3M9 14l3 3 3-3"/></svg></div>Asansör Etiket<span class="nbadge rd" id="bdg-asan" style="display:none">0</span></div>
+    <div class="ni" data-p="teklifler" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>Teklifler<span class="nbadge am" id="bdg-tek" style="display:none">0</span></div>
+    <div class="ni" data-p="gorevler" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>Görev Yönetimi<span class="nbadge am" id="bdg-gov">0</span></div>
+    <div class="ni" data-p="icra" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>İcra Listesi<span class="nbadge rd" id="bdg-icra" style="display:none">0</span></div>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Yönetim</div>
-    <div class="ni" data-p="sakinler"><div class="nico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>Sakinler<span class="nbadge" id="bdg-sakin" style="display:none">0</span></div>
-    <div class="ni" data-p="personel"><div class="nico"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>Personel<span class="nbadge" id="bdg-per" style="display:none">0</span></div>
-    <div class="ni" data-p="duyurular"><div class="nico"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>Duyurular<span class="nbadge am" id="bdg-duy" style="display:none">0</span></div>
-    <div class="ni" data-p="ariza"><div class="nico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>Arıza & Bakım<span class="nbadge rd" id="bdg-ariza" style="display:none">0</span></div>
+    <div class="ni" data-p="sakinler" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>Sakinler<span class="nbadge" id="bdg-sakin" style="display:none">0</span></div>
+    <div class="ni" data-p="personel" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>Personel<span class="nbadge" id="bdg-per" style="display:none">0</span></div>
+    <div class="ni" data-p="duyurular" data-role="yonetici sakin"><div class="nico"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>Duyurular<span class="nbadge am" id="bdg-duy" style="display:none">0</span></div>
+    <div class="ni" data-p="ariza" data-role="yonetici sakin"><div class="nico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>Arıza & Bakım<span class="nbadge rd" id="bdg-ariza" style="display:none">0</span></div>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Finans & Raporlar</div>
-    <div class="ni" data-p="tahsilat"><div class="nico"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div>Tahsilat & Borç<span class="nbadge rd" id="bdg-borc" style="display:none">0</span></div>
-    <div class="ni" data-p="finans"><div class="nico"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>Gelir/Gider<span class="nbadge" id="bdg-fin" style="display:none">!</span></div>
-    <div class="ni" data-p="raporlar"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>Raporlar & Analiz</div>
-    <div class="ni" data-p="ai-asistan"><div class="nico"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 0 2h-1v1a2 2 0 0 1-2 2v1a1 1 0 0 1-2 0v-1H7v1a1 1 0 0 1-2 0v-1a2 2 0 0 1-2-2v-1H2a1 1 0 0 1 0-2h1a7 7 0 0 1 7-7h1V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2zM9 14a1 1 0 1 0 2 0 1 1 0 0 0-2 0zm4 0a1 1 0 1 0 2 0 1 1 0 0 0-2 0z"/></svg></div>AI Asistan</div>
+    <div class="ni" data-p="tahsilat" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div>Tahsilat & Borç<span class="nbadge rd" id="bdg-borc" style="display:none">0</span></div>
+    <div class="ni" data-p="finans" data-role="yonetici sakin"><div class="nico"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>Gelir/Gider<span class="nbadge" id="bdg-fin" style="display:none">!</span></div>
+    <div class="ni" data-p="raporlar" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>Raporlar & Analiz</div>
+    <div class="ni" data-p="ai-asistan" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 0 2h-1v1a2 2 0 0 1-2 2v1a1 1 0 0 1-2 0v-1H7v1a1 1 0 0 1-2 0v-1a2 2 0 0 1-2-2v-1H2a1 1 0 0 1 0-2h1a7 7 0 0 1 7-7h1V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2zM9 14a1 1 0 1 0 2 0 1 1 0 0 0-2 0zm4 0a1 1 0 1 0 2 0 1 1 0 0 0-2 0z"/></svg></div>AI Asistan</div>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Ek Modüller</div>
-    <div class="ni" data-p="sigorta"><div class="nico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>Sigorta Takibi<span class="nbadge rd" id="bdg-sig" style="display:none">!</span></div>
-    <div class="ni" data-p="toplanti"><div class="nico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>Toplantı Yönetimi<span class="nbadge am" id="bdg-top" style="display:none">0</span></div>
-    <div class="ni" data-p="fatura"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>Fatura Yönetimi<span class="nbadge am" id="bdg-fat" style="display:none">0</span></div>
+    <div class="ni" data-p="sigorta" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>Sigorta Takibi<span class="nbadge rd" id="bdg-sig" style="display:none">!</span></div>
+    <div class="ni" data-p="toplanti" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>Toplantı Yönetimi<span class="nbadge am" id="bdg-top" style="display:none">0</span></div>
+    <div class="ni" data-p="fatura" data-role="yonetici"><div class="nico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>Fatura Yönetimi<span class="nbadge am" id="bdg-fat" style="display:none">0</span></div>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Araçlar</div>
-    <div class="ni" data-p="ayarlar"><div class="nico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>Ayarlar</div>
+    <div class="ni" data-p="superadmin" data-role="superadmin"><div class="nico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>Site Yönetimi</div>
+    <div class="ni" data-p="ayarlar" data-role="yonetici superadmin"><div class="nico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>Ayarlar</div>
   </div>
   <div class="sb-foot">
-    <div class="sb-user">
+    <div class="sb-user" style="cursor:pointer" onclick="switchRole()" title="Rol değiştir">
       <div class="sb-av" id="sb-av-init">SY</div>
       <div><div class="sb-un" id="sb-user-name">Yönetici</div><div class="sb-ur" id="sb-user-role">Sistem Admini</div></div>
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--tx-4);stroke-width:2;fill:none;margin-left:auto;flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
   </div>
 </aside> <!-- MAIN -->
@@ -2078,6 +2160,54 @@ select.fi,select.fs{
 </div>
 
 <!-- AI ASISTAN -->
+<!-- SÜPER ADMİN PANELİ -->
+<div id="page-superadmin" class="pg">
+  <div class="card mb16" style="background:linear-gradient(135deg,#7c3aed 0%,#4f46e5 100%);color:#fff;border:none">
+    <div class="fbc">
+      <div>
+        <div style="font-size:20px;font-weight:700;margin-bottom:4px">Süper Admin Paneli</div>
+        <div style="font-size:13px;opacity:.7">Tüm kayıtlı siteleri, abonelikleri ve onay durumlarını buradan yönetin.</div>
+      </div>
+      <div style="font-size:11px;background:rgba(255,255,255,.15);padding:6px 14px;border-radius:20px">Yazılım Sahibi</div>
+    </div>
+  </div>
+  <div class="sa-stat-grid" id="sa-stats"></div>
+  <div class="card mb16">
+    <div class="fbc mb12">
+      <div class="card-t">Kayıtlı Siteler</div>
+      <div class="fc g8">
+        <button class="btn bg sm" onclick="saAddSite()">+ Yeni Site Ekle</button>
+        <select class="fi sm" id="sa-filter" onchange="renderSuperAdmin()" style="width:auto;padding:6px 10px">
+          <option value="">Tüm Durumlar</option>
+          <option value="aktif">Aktif</option>
+          <option value="beklemede">Onay Bekliyor</option>
+          <option value="pasif">Pasif</option>
+        </select>
+      </div>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:var(--r8);overflow:hidden">
+      <div class="sa-site-row sa-site-header">
+        <div>Site / Apartman Adı</div><div>Daire</div><div>Yönetici</div><div>Abonelik</div><div>Durum</div><div>İşlem</div>
+      </div>
+      <div id="sa-site-list"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-t mb8">Abonelik Ücret Tablosu</div>
+    <div class="t3 mb12" style="font-size:12px">Daire sayısına göre aylık abonelik ücretleri</div>
+    <div class="tw"><table>
+      <thead><tr><th>Daire Aralığı</th><th>Aylık Ücret</th><th>Yıllık Ücret</th><th>Daire Başı</th></tr></thead>
+      <tbody>
+        <tr><td>1-20 Daire</td><td style="font-weight:700;color:var(--ok)">₺299</td><td>₺2.990</td><td>₺14,95/daire</td></tr>
+        <tr><td>21-50 Daire</td><td style="font-weight:700;color:var(--ok)">₺499</td><td>₺4.990</td><td>₺9,98/daire</td></tr>
+        <tr><td>51-100 Daire</td><td style="font-weight:700;color:var(--brand)">₺799</td><td>₺7.990</td><td>₺7,99/daire</td></tr>
+        <tr><td>101-200 Daire</td><td style="font-weight:700;color:var(--brand)">₺1.199</td><td>₺11.990</td><td>₺5,99/daire</td></tr>
+        <tr><td>201+ Daire</td><td style="font-weight:700;color:var(--purple)">₺1.799</td><td>₺17.990</td><td>₺4,50/daire</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
 <div id="page-ai-asistan" class="pg">
   <div class="card mb16" style="background:linear-gradient(135deg,var(--brand) 0%,#7c3aed 100%);color:#fff;border:none">
     <div class="fbc">
@@ -2883,7 +3013,7 @@ function toast(msg, type='') {
 // 
 // NAVIGATION
 // 
-const PAGE_TITLES = { dashboard:'Anasayfa', apartmanlar:'Apartmanlar', karar:'Karar Metni Oluşturucu', isletme:'İşletme Projesi', denetim:'Denetim Raporları', asansor:'Asansör Etiket Kontrolü', teklifler:'Teklifler', gorevler:'Görev Yönetimi', icra:'İcra Listesi', finans:'Gelir / Gider Takibi', ayarlar:'Ayarlar', sakinler:'Sakin Yönetimi', personel:'Personel Yönetimi', duyurular:'Duyuru & İletişim', ariza:'Arıza & Bakım Yönetimi', tahsilat:'Tahsilat & Borç Takibi', raporlar:'Raporlar & Analitik', 'ai-asistan':'AI Yönetim Asistanı', sigorta:'Sigorta Takibi', toplanti:'Toplantı Yönetimi', fatura:'Fatura & Hizmet Yönetimi' };
+const PAGE_TITLES = { dashboard:'Anasayfa', apartmanlar:'Apartmanlar', karar:'Karar Metni Oluşturucu', isletme:'İşletme Projesi', denetim:'Denetim Raporları', asansor:'Asansör Etiket Kontrolü', teklifler:'Teklifler', gorevler:'Görev Yönetimi', icra:'İcra Listesi', finans:'Gelir / Gider Takibi', ayarlar:'Ayarlar', sakinler:'Sakin Yönetimi', personel:'Personel Yönetimi', duyurular:'Duyuru & İletişim', ariza:'Arıza & Bakım Yönetimi', tahsilat:'Tahsilat & Borç Takibi', raporlar:'Raporlar & Analitik', 'ai-asistan':'AI Yönetim Asistanı', sigorta:'Sigorta Takibi', toplanti:'Toplantı Yönetimi', fatura:'Fatura & Hizmet Yönetimi', superadmin:'Süper Admin Paneli' };
 
 function goPage(p) {
  document.querySelectorAll('.ni').forEach(n => n.classList.toggle('on', n.dataset.p === p));
@@ -2936,6 +3066,7 @@ function goPage(p) {
   if (p==='sigorta') { renderSigorta(); }
   if (p==='toplanti') { renderToplanti(); }
   if (p==='fatura') { renderFatura(); }
+  if (p==='superadmin') { renderSuperAdmin(); }
   // Apt context topbar güncelle
   if (APT_SPECIFIC_PAGES && APT_SPECIFIC_PAGES.includes(p)) updateAptCtxTopbar();
 }
@@ -3040,14 +3171,14 @@ function renderDashboard() {
     ? '<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
     : '<svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 10l3-3 3 3M9 14l3 3 3-3"/></svg>';
   document.getElementById('ds-stats').innerHTML =
-    '<div class="sc"><div class="sc-ico ic-bl"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4"/></svg></div><div class="sc-lbl">Aktif Apartman</div><div class="sc-val v-bl">' + aktif + '</div><div class="sc-sub">' + S.apartmanlar.length + ' toplam kayıt</div><div class="sc-bar bar-bl"></div></div>' +
-    '<div class="sc"><div class="sc-ico ic-pu"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><div class="sc-lbl">Toplam Daire</div><div class="sc-val v-pu">' + topDaire + '</div><div class="sc-sub">Tüm apartmanlar</div><div class="sc-bar bar-pu"></div></div>' +
-    '<div class="sc"><div class="sc-ico ic-am"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div class="sc-lbl">Açık Görev</div><div class="sc-val v-am">' + acikGov + '</div><div class="sc-sub">' + tamGov + ' tamamlandı</div><div class="sc-bar bar-am"></div></div>' +
-    '<div class="sc"><div class="sc-ico ' + (dolAsan?'ic-rd':'ic-tl') + '">' + asnIco + '</div><div class="sc-lbl">Asansör Uyarısı</div><div class="sc-val ' + (dolAsan?'v-rd':'v-tl') + '">' + dolAsan + '</div><div class="sc-sub">Süresi dolmuş etiket</div><div class="sc-bar ' + (dolAsan?'bar-rd':'bar-tl') + '"></div></div>' +
-    '<div class="sc"><div class="sc-ico ic-gr"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div><div class="sc-lbl">Toplam Hizmet Bedeli</div><div class="sc-val v-gr" style="font-size:18px">₺' + fmt(topHizmet) + '</div><div class="sc-sub">Aktif apartmanlar</div><div class="sc-bar bar-gr"></div></div>' +
-    '<div class="sc"><div class="sc-ico ic-bl"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="sc-lbl">Toplam Sakin</div><div class="sc-val v-bl">' + topSakin + '</div><div class="sc-sub">' + borcluSakin + ' borçlu</div><div class="sc-bar bar-bl"></div></div>' +
-    '<div class="sc"><div class="sc-ico ic-rd"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="sc-lbl">Açık Arıza</div><div class="sc-val v-rd">' + acikAriza + '</div><div class="sc-sub">Bekleyen</div><div class="sc-bar bar-rd"></div></div>' +
-    '<div class="sc"><div class="sc-ico ic-am"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="sc-lbl">Aktif Personel</div><div class="sc-val v-am">' + aktifPer + '</div><div class="sc-sub">Toplam ' + S.personel.length + '</div><div class="sc-bar bar-am"></div></div>';
+    '<div class="sc" onclick="goPage(\'apartmanlar\')" style="cursor:pointer"><div class="sc-ico ic-bl"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4"/></svg></div><div class="sc-lbl">Aktif Apartman</div><div class="sc-val v-bl">' + aktif + '</div><div class="sc-sub">' + S.apartmanlar.length + ' toplam kayıt</div><div class="sc-bar bar-bl"></div></div>' +
+    '<div class="sc" onclick="goPage(\'apartmanlar\')" style="cursor:pointer"><div class="sc-ico ic-pu"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><div class="sc-lbl">Toplam Daire</div><div class="sc-val v-pu">' + topDaire + '</div><div class="sc-sub">Tüm apartmanlar</div><div class="sc-bar bar-pu"></div></div>' +
+    '<div class="sc" onclick="goPage(\'gorevler\')" style="cursor:pointer"><div class="sc-ico ic-am"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div class="sc-lbl">Açık Görev</div><div class="sc-val v-am">' + acikGov + '</div><div class="sc-sub">' + tamGov + ' tamamlandı</div><div class="sc-bar bar-am"></div></div>' +
+    '<div class="sc" onclick="goPage(\'asansor\')" style="cursor:pointer"><div class="sc-ico ' + (dolAsan?'ic-rd':'ic-tl') + '">' + asnIco + '</div><div class="sc-lbl">Asansör Uyarısı</div><div class="sc-val ' + (dolAsan?'v-rd':'v-tl') + '">' + dolAsan + '</div><div class="sc-sub">Süresi dolmuş etiket</div><div class="sc-bar ' + (dolAsan?'bar-rd':'bar-tl') + '"></div></div>' +
+    '<div class="sc" onclick="goPage(\'finans\')" style="cursor:pointer"><div class="sc-ico ic-gr"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div><div class="sc-lbl">Toplam Hizmet Bedeli</div><div class="sc-val v-gr" style="font-size:18px">₺' + fmt(topHizmet) + '</div><div class="sc-sub">Aktif apartmanlar</div><div class="sc-bar bar-gr"></div></div>' +
+    '<div class="sc" onclick="goPage(\'sakinler\')" style="cursor:pointer"><div class="sc-ico ic-bl"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="sc-lbl">Toplam Sakin</div><div class="sc-val v-bl">' + topSakin + '</div><div class="sc-sub">' + borcluSakin + ' borçlu</div><div class="sc-bar bar-bl"></div></div>' +
+    '<div class="sc" onclick="goPage(\'ariza\')" style="cursor:pointer"><div class="sc-ico ic-rd"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="sc-lbl">Açık Arıza</div><div class="sc-val v-rd">' + acikAriza + '</div><div class="sc-sub">Bekleyen</div><div class="sc-bar bar-rd"></div></div>' +
+    '<div class="sc" onclick="goPage(\'personel\')" style="cursor:pointer"><div class="sc-ico ic-am"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="sc-lbl">Aktif Personel</div><div class="sc-val v-am">' + aktifPer + '</div><div class="sc-sub">Toplam ' + S.personel.length + '</div><div class="sc-bar bar-am"></div></div>';
 
   // Helper: empty state
   function empState(txt) {
@@ -4202,20 +4333,21 @@ function renderTopluDaireler() {
     existing[s.daire][s.tip] = s;
   });
   const tipOpts = ['Standart','Dubleks','Stüdyo','Penthouse','1+1','2+1','3+1','4+1'].map(t=>`<option value="${t}">${t}</option>`).join('');
-  const grpOpts = ['Standart','A Grubu','B Grubu','C Grubu','Lüks'].map(g=>`<option value="${g}">${g}</option>`).join('');
+  const blokOpts = (apt.bloklar||['A Blok']).map(b=>`<option value="${b}">${b}</option>`).join('');
   let rows = '';
   for (let i = 1; i <= count; i++) {
     const dNo = String(i);
     const mal = existing[dNo]?.malik || {};
     const kir = existing[dNo]?.kiralik || {};
     const selTip = v => tipOpts.replace(`value="${v||'Standart'}"`,`value="${v||'Standart'}" selected`);
-    const selGrp = v => grpOpts.replace(`value="${v||'Standart'}"`,`value="${v||'Standart'}" selected`);
+    const selBlk = v => blokOpts.replace(`value="${v||apt.bloklar?.[0]||'A Blok'}"`,`value="${v||apt.bloklar?.[0]||'A Blok'}" selected`);
     rows += `<tr style="border-bottom:1px solid var(--border)">
-      <td style="padding:7px 10px"><div style="border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:13px;font-weight:600;min-width:36px;text-align:center;display:inline-block"><input class="fi" value="${dNo}" data-dno="${i}" style="width:40px;padding:3px 4px;font-size:13px;font-weight:600;text-align:center;border:none;background:transparent"></div></td>
+      <td style="padding:7px 10px"><div style="border:1px solid var(--border);border-radius:6px;padding:5px 8px;display:inline-block"><input class="fi" value="${dNo}" data-dno="${i}" style="width:40px;padding:3px 4px;font-size:13px;font-weight:600;text-align:center;border:none;background:transparent"></div></td>
       <td style="padding:7px 8px"><input class="fi" placeholder="Ad Soyad" value="${mal.ad||''}" data-malik="${i}" style="width:100%;padding:6px 10px;font-size:12.5px"></td>
+      <td style="padding:7px 8px"><input class="fi" placeholder="0(5XX) XXX XX XX" value="${mal.tel||''}" data-maltel="${i}" style="width:100%;padding:6px 10px;font-size:12.5px"></td>
       <td style="padding:7px 8px"><input class="fi" placeholder="Ad Soyad" value="${kir.ad||''}" data-kiralik="${i}" style="width:100%;padding:6px 10px;font-size:12.5px"></td>
       <td style="padding:7px 8px"><select class="fi" data-tip="${i}" style="width:100%;padding:6px 10px;font-size:12.5px">${selTip(mal.dairetipi)}</select></td>
-      <td style="padding:7px 8px"><select class="fi" data-grup="${i}" style="width:100%;padding:6px 10px;font-size:12.5px">${selGrp(mal.dairegrup)}</select></td>
+      <td style="padding:7px 8px"><select class="fi" data-blok="${i}" style="width:100%;padding:6px 10px;font-size:12.5px">${selBlk(mal.blok)}</select></td>
     </tr>`;
   }
   container.innerHTML = `
@@ -4226,9 +4358,10 @@ function renderTopluDaireler() {
           <tr style="background:var(--s2)">
             <th style="padding:10px 10px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border);width:80px">Daire No</th>
             <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border)">Kat Maliki</th>
+            <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border);width:150px">Telefon</th>
             <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border)">Kiracı</th>
-            <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border);width:145px">Daire tipi</th>
-            <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border);width:145px">Daire grup</th>
+            <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border);width:130px">Daire tipi</th>
+            <th style="padding:10px 8px;font-size:12px;font-weight:600;color:var(--tx-3);text-align:left;border-bottom:1px solid var(--border);width:120px">Blok</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
@@ -4252,13 +4385,14 @@ function saveTopluDaireler() {
   for (let i=1; i<=count; i++) {
     const dNo = document.querySelector(`[data-dno="${i}"]`)?.value?.trim()||String(i);
     const malikAd = document.querySelector(`[data-malik="${i}"]`)?.value?.trim()||'';
+    const malikTel = document.querySelector(`[data-maltel="${i}"]`)?.value?.trim()||'';
     const kiralikAd = document.querySelector(`[data-kiralik="${i}"]`)?.value?.trim()||'';
     const tip = document.querySelector(`[data-tip="${i}"]`)?.value||'Standart';
-    const grup = document.querySelector(`[data-grup="${i}"]`)?.value||'Standart';
+    const blok = document.querySelector(`[data-blok="${i}"]`)?.value||'';
     if (malikAd) {
       const ex = S.sakinler.find(s=>String(s.aptId)===String(aptId)&&s.daire===dNo&&s.tip==='malik');
-      if (ex) { ex.ad=malikAd; ex.dairetipi=tip; ex.dairegrup=grup; guncellendi++; }
-      else { S.sakinler.push({id:Date.now()+i,ad:malikAd,aptId:+aptId,aptAd:apt?.ad||'',tip:'malik',daire:dNo,dairetipi:tip,dairegrup:grup,giris:tarih,aidat:0,borc:0,tel:'',email:'',not:''}); ok++; }
+      if (ex) { ex.ad=malikAd; ex.tel=malikTel; ex.dairetipi=tip; ex.blok=blok; guncellendi++; }
+      else { S.sakinler.push({id:Date.now()+i,ad:malikAd,aptId:+aptId,aptAd:apt?.ad||'',tip:'malik',daire:dNo,tel:malikTel,dairetipi:tip,blok:blok,giris:tarih,aidat:0,borc:0,email:'',not:''}); ok++; }
     }
     if (kiralikAd) {
       const ex = S.sakinler.find(s=>String(s.aptId)===String(aptId)&&s.daire===dNo&&s.tip==='kiralik');
@@ -7161,28 +7295,162 @@ function loadDemoData() {
   toast('✅ Demo veriler başarıyla yüklendi! Tüm modüller hazır.', 'ok');
 }
 
-// Not: initApp(), Supabase auth başarısında çağrılır.
+// ── ROL SİSTEMİ ────────────────────────────────
+let currentRole = localStorage.getItem('syp_role') || '';
+
+function selectRole(role) {
+  currentRole = role;
+  localStorage.setItem('syp_role', role);
+  document.getElementById('role-screen')?.classList.add('hidden');
+  document.getElementById('main').style.display = '';
+  applyRole(role);
+  loadState();
+  if (!S.apartmanlar || S.apartmanlar.length === 0) {
+    const _orig = window.confirm; window.confirm = () => true; loadDemoData(); window.confirm = _orig;
+  } else { initApp(); }
+  if (role === 'superadmin') goPage('superadmin');
+  else goPage('dashboard');
+}
+
+function applyRole(role) {
+  // Sidebar menülerini role göre filtrele
+  document.querySelectorAll('#sb .ni[data-role]').forEach(el => {
+    const roles = el.getAttribute('data-role');
+    el.style.display = roles.includes(role) ? '' : 'none';
+  });
+  // Section labels: boşsa gizle
+  document.querySelectorAll('#sb .sb-sec').forEach(sec => {
+    const visible = Array.from(sec.querySelectorAll('.ni[data-role]')).filter(n => n.style.display !== 'none');
+    const lbl = sec.querySelector('.sb-sec-lbl');
+    if (lbl && visible.length === 0) sec.style.display = 'none';
+    else sec.style.display = '';
+  });
+  // Kullanıcı bilgisi güncelle
+  const nameEl = document.getElementById('sb-user-name');
+  const roleEl = document.getElementById('sb-user-role');
+  const avEl = document.getElementById('sb-av-init');
+  if (role === 'superadmin') {
+    if (nameEl) nameEl.textContent = 'Süper Admin';
+    if (roleEl) roleEl.textContent = 'Yazılım Yöneticisi';
+    if (avEl) { avEl.textContent = 'SA'; avEl.style.background = '#7c3aed'; avEl.style.color = '#fff'; }
+  } else if (role === 'sakin') {
+    if (nameEl) nameEl.textContent = 'Site Sakini';
+    if (roleEl) roleEl.textContent = 'Daire Sakini';
+    if (avEl) { avEl.textContent = 'SK'; avEl.style.background = '#059669'; avEl.style.color = '#fff'; }
+  } else {
+    const nm = (S.ayarlar?.yonetici) || 'Yönetici';
+    if (nameEl) nameEl.textContent = nm;
+    if (roleEl) roleEl.textContent = S.ayarlar?.unvan || 'Site Yöneticisi';
+    if (avEl) { avEl.textContent = nm.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); avEl.style.background = ''; avEl.style.color = ''; }
+  }
+}
+
+function switchRole() {
+  localStorage.removeItem('syp_role');
+  currentRole = '';
+  document.getElementById('main').style.display = 'none';
+  document.getElementById('role-screen')?.classList.remove('hidden');
+}
+
+// ── SÜPER ADMİN FONKSİYONLARI ─────────────────
+function renderSuperAdmin() {
+  const filter = document.getElementById('sa-filter')?.value || '';
+  // Stats
+  const sites = S.apartmanlar || [];
+  const totalDaire = sites.reduce((s,a)=>s+(a.daireSayisi||0),0);
+  const aktifSites = sites.filter(a=>a.durum!=='pasif'&&a.durum!=='beklemede').length;
+  const bekleyenSites = sites.filter(a=>a.durum==='beklemede').length;
+  const aylikGelir = sites.reduce((s,a)=>s+calcAbonelik(a.daireSayisi||0),0);
+
+  const statsEl = document.getElementById('sa-stats');
+  if (statsEl) statsEl.innerHTML = `
+    <div class="sa-stat"><div class="sa-lbl">Toplam Site</div><div class="sa-val">${sites.length}</div></div>
+    <div class="sa-stat"><div class="sa-lbl">Toplam Daire</div><div class="sa-val">${totalDaire}</div></div>
+    <div class="sa-stat"><div class="sa-lbl">Onay Bekleyen</div><div class="sa-val" style="color:var(--warn)">${bekleyenSites}</div></div>
+    <div class="sa-stat"><div class="sa-lbl">Aylık Gelir</div><div class="sa-val" style="color:var(--ok)">₺${fmt(aylikGelir)}</div></div>`;
+
+  // Site list
+  let filtered = sites;
+  if (filter === 'aktif') filtered = sites.filter(a=>a.durum!=='pasif'&&a.durum!=='beklemede');
+  else if (filter === 'beklemede') filtered = sites.filter(a=>a.durum==='beklemede');
+  else if (filter === 'pasif') filtered = sites.filter(a=>a.durum==='pasif');
+
+  const listEl = document.getElementById('sa-site-list');
+  if (!listEl) return;
+  if (!filtered.length) { listEl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--tx-3)">Kayıtlı site bulunamadı.</div>'; return; }
+  listEl.innerHTML = filtered.map(a => {
+    const durum = a.durum || 'aktif';
+    const cls = durum==='aktif'?'b-gr':durum==='beklemede'?'b-am':'b-rd';
+    const lbl = durum==='aktif'?'Aktif':durum==='beklemede'?'Onay Bekliyor':'Pasif';
+    const ucret = calcAbonelik(a.daireSayisi||0);
+    return `<div class="sa-site-row">
+      <div><strong>${a.ad}</strong><div class="t3" style="font-size:11px">${a.adres||''} · ${a.il||''}</div></div>
+      <div style="font-weight:700;color:var(--brand)">${a.daireSayisi||0}</div>
+      <div>${a.yon||'—'}</div>
+      <div style="font-weight:600;color:var(--ok)">₺${fmt(ucret)}/ay</div>
+      <div><span class="b ${cls}">${lbl}</span></div>
+      <div class="act">
+        ${durum==='beklemede'?`<button class="btn bg xs" onclick="saOnaylaSite(${a.id})" style="font-size:11px">✓ Onayla</button>`:''}
+        <button class="btn xs" style="font-size:11px;background:var(--err-bg);color:var(--err);border:1px solid var(--err)" onclick="saToggleSite(${a.id})">${durum==='pasif'?'Aktifle':'Durdur'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function calcAbonelik(daire) {
+  if (daire <= 20) return 299;
+  if (daire <= 50) return 499;
+  if (daire <= 100) return 799;
+  if (daire <= 200) return 1199;
+  return 1799;
+}
+
+function saOnaylaSite(id) {
+  const a = S.apartmanlar.find(x=>x.id===id);
+  if (a) { a.durum = 'aktif'; save(); renderSuperAdmin(); toast(a.ad+' onaylandı!','ok'); }
+}
+
+function saToggleSite(id) {
+  const a = S.apartmanlar.find(x=>x.id===id);
+  if (a) { a.durum = a.durum==='pasif'?'aktif':'pasif'; save(); renderSuperAdmin(); toast(a.ad+' durumu güncellendi.','ok'); }
+}
+
+function saAddSite() {
+  goPage('apartmanlar');
+  setTimeout(()=>document.querySelector('[data-tab="apt-form"]')?.click(), 200);
+}
+
+// ── DASHBOARD KART BAĞLANTILARI ───────────────
+function dashCardClick(page) {
+  goPage(page);
+}
 
 // ── SUPABASE KREDENSİYELLER ──────────────────────
 const _SB_URL = 'https://xmjaihxpuhygrjpghiww.supabase.co';
 const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtamFpaHhwdWh5Z3JqcGdoaXd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMzYyMzIsImV4cCI6MjA4ODkxMjIzMn0.DO1n4zrn8y60MBtNhRukGVL68k2oqq9Yqi4QobG_WTo';
 
-// STARTUP — Direkt erişim (auth devre dışı)
+// STARTUP — Rol seçim ekranı ile başla
 (function startup() {
   initSupabase(_SB_URL, _SB_KEY);
-  const mainEl = document.getElementById('main');
-  if (mainEl) mainEl.style.display = '';
   const authEl = document.getElementById('auth-screen');
   if (authEl) authEl.classList.add('hidden');
-  loadState();
-  // İlk açılışta veri yoksa demo verileri otomatik yükle
-  if (!S.apartmanlar || S.apartmanlar.length === 0) {
-    const _orig = window.confirm;
-    window.confirm = () => true;
-    loadDemoData();
-    window.confirm = _orig;
+
+  // Daha önce rol seçilmişse direkt giriş
+  const savedRole = localStorage.getItem('syp_role');
+  if (savedRole) {
+    currentRole = savedRole;
+    document.getElementById('role-screen')?.classList.add('hidden');
+    document.getElementById('main').style.display = '';
+    applyRole(savedRole);
+    loadState();
+    if (!S.apartmanlar || S.apartmanlar.length === 0) {
+      const _orig = window.confirm; window.confirm = () => true; loadDemoData(); window.confirm = _orig;
+    } else { initApp(); }
+    if (savedRole === 'superadmin') goPage('superadmin');
   } else {
-    initApp();
+    // Rol seçim ekranını göster
+    document.getElementById('main').style.display = 'none';
+    document.getElementById('role-screen')?.classList.remove('hidden');
   }
 })();
 </script>
